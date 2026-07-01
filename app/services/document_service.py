@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.document import Document
+from app.services.chunk_service import ChunkService
 
 
 class DocumentService:
@@ -39,6 +40,12 @@ class DocumentService:
         db.add(document)
         db.commit()
         db.refresh(document)
+
+        ChunkService.create_chunks(
+            db=db,
+            document_id=document.id,
+            text=text,
+        )
 
         return document
 
