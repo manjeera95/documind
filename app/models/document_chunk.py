@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -16,3 +16,8 @@ class DocumentChunk(Base):
     chunk_index: Mapped[int] = mapped_column()
 
     chunk_text: Mapped[str] = mapped_column()
+
+    embedding: Mapped[list] = mapped_column(
+        JSON,
+        nullable=True,
+    )
