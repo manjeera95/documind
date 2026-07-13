@@ -82,7 +82,7 @@ Answer + Source Citations
 ### Swagger API
 
 ![Swagger API](assets/swagger.png)
-
+![Swagger API](assets/swaggerr.png)
 ---
 
 ### Upload Document
