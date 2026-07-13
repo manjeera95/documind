@@ -11,7 +11,6 @@ from app.services.document_service import DocumentService
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
 UPLOAD_DIR = "uploads"
-
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
@@ -39,7 +38,7 @@ def upload_document(
         db=db,
         filename=file.filename,
         filepath=file_path,
-        owner_id=1,
+        owner_id=current_user.id,
     )
 
     return {
@@ -54,4 +53,15 @@ def list_documents(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    return DocumentService.get_documents(db)
+    documents = DocumentService.get_documents(
+        db=db,
+        owner_id=current_user.id,
+    )
+
+    return [
+        {
+            "id": doc.id,
+            "filename": doc.filename,
+        }
+        for doc in documents
+    ]
