@@ -1,4 +1,5 @@
 import fitz
+import os
 from sqlalchemy.orm import Session
 
 from app.models.document import Document
@@ -134,3 +135,21 @@ class DocumentService:
             )
             .all()
         )
+
+    @staticmethod
+    def delete_document(
+        db: Session,
+        document: Document,
+    ):
+        # Delete all chunks belonging to this document
+        db.query(DocumentChunk).filter(
+            DocumentChunk.document_id == document.id
+        ).delete()
+
+        # Delete the PDF file
+        if os.path.exists(document.filepath):
+            os.remove(document.filepath)
+
+        # Delete the document
+        db.delete(document)
+        db.commit()

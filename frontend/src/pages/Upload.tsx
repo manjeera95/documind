@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import api from "../services/api";
 
 export default function Upload() {
   const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleUpload = async () => {
     if (!file) {
-      alert("Please select a PDF file.");
+      toast.error("Please select a PDF file.");
       return;
     }
 
@@ -14,10 +16,12 @@ export default function Upload() {
     formData.append("file", file);
 
     try {
+      setUploading(true);
+
       const token = localStorage.getItem("token");
 
       const response = await api.post(
-        "/documents/upload",
+        "/documents/upload/",
         formData,
         {
           headers: {
@@ -27,36 +31,41 @@ export default function Upload() {
         }
       );
 
-      alert(response.data.message);
+      toast.success(response.data.message);
+
+      // Clear selected file
+      setFile(null);
+
     } catch (error: any) {
       console.error(error);
 
       if (error.response) {
-        alert(
-          `Status: ${error.response.status}\n${JSON.stringify(
-            error.response.data,
-            null,
-            2
-          )}`
-        );
+        toast.error(error.response.data.detail || "Upload failed");
       } else {
-        alert(error.message);
+        toast.error("Unable to connect to the server");
       }
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
-        <h1 className="text-3xl font-bold text-blue-600 mb-6">
-          Upload Document
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg">
+
+        <h1 className="text-3xl font-bold text-blue-600 mb-2">
+          📄 Upload Document
         </h1>
+
+        <p className="text-gray-500 mb-6">
+          Upload a PDF to chat with it using AI.
+        </p>
 
         <input
           type="file"
           accept=".pdf"
           onChange={(e) => {
-            if (e.target.files) {
+            if (e.target.files && e.target.files.length > 0) {
               setFile(e.target.files[0]);
             }
           }}
@@ -64,17 +73,25 @@ export default function Upload() {
         />
 
         {file && (
-          <p className="mt-4 text-gray-600">
-            Selected: <strong>{file.name}</strong>
-          </p>
+          <div className="mt-4 rounded-lg bg-blue-50 p-3">
+            <p className="text-gray-700">
+              <strong>Selected:</strong> {file.name}
+            </p>
+          </div>
         )}
 
         <button
           onClick={handleUpload}
-          className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+          disabled={uploading}
+          className={`mt-6 w-full py-3 rounded-lg text-white transition ${
+            uploading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Upload
+          {uploading ? "Uploading..." : "Upload PDF"}
         </button>
+
       </div>
     </div>
   );

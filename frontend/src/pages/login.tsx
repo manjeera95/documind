@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import api from "../services/api";
 
 export default function Login() {
@@ -19,22 +20,19 @@ export default function Login() {
 
       localStorage.setItem("token", response.data.access_token);
 
-      
+      toast.success("Login successful!");
 
-      window.location.href = "/dashboard";
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+
     } catch (error: any) {
       console.error(error);
 
       if (error.response) {
-        alert(
-          `Status: ${error.response.status}\n${JSON.stringify(
-            error.response.data,
-            null,
-            2
-          )}`
-        );
+        toast.error(error.response.data.detail || "Login failed");
       } else {
-        alert(error.message);
+        toast.error("Unable to connect to the server");
       }
     }
   };

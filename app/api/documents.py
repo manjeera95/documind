@@ -65,3 +65,30 @@ def list_documents(
         }
         for doc in documents
     ]
+
+@router.delete("/{document_id}")
+def delete_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    document = DocumentService.get_document_by_id(
+        db=db,
+        document_id=document_id,
+        owner_id=current_user.id,
+    )
+
+    if not document:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    DocumentService.delete_document(
+        db=db,
+        document=document,
+    )
+
+    return {
+        "message": "Document deleted successfully",
+    }
