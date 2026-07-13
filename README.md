@@ -1,6 +1,8 @@
 # DocuMind
 
-An AI-powered document intelligence platform built with FastAPI, PostgreSQL, and Ollama. Users can upload PDF documents, perform semantic search, and ask questions using Retrieval-Augmented Generation (RAG).
+Developed by **Manu**
+
+An AI-powered document intelligence platform built with FastAPI, PostgreSQL, and Ollama that enables users to upload PDF documents and interact with them using Retrieval-Augmented Generation (RAG).
 
 ---
 
@@ -24,6 +26,7 @@ An AI-powered document intelligence platform built with FastAPI, PostgreSQL, and
 ## Tech Stack
 
 ### Backend
+
 - Python
 - FastAPI
 - SQLAlchemy
@@ -32,25 +35,28 @@ An AI-powered document intelligence platform built with FastAPI, PostgreSQL, and
 - Pydantic
 
 ### AI
+
 - Ollama
 - Llama 3.2
 - Sentence Transformers
 
 ### Authentication
+
 - JWT
 
 ### PDF Processing
+
 - PyMuPDF
 
 ---
 
 ## Architecture
 
-```
+```text
 User
    │
    ▼
-FastAPI
+FastAPI API
    │
 JWT Authentication
    │
@@ -71,9 +77,41 @@ Answer + Source Citations
 
 ---
 
+## Screenshots
+
+### Swagger API
+
+![Swagger API](assets/swagger.png)
+
+---
+
+### Upload Document
+
+![Upload Document](assets/upload.png)
+
+---
+
+### Documents
+
+![Documents](assets/documents.png)
+
+---
+
+### AI Chat
+
+![AI Chat](assets/chat.png)
+
+---
+
+### Source Citations
+
+![Source Citations](assets/citations.png)
+
+---
+
 ## Project Structure
 
-```
+```text
 app/
 ├── ai/
 ├── api/
@@ -81,13 +119,14 @@ app/
 ├── core/
 ├── db/
 ├── models/
-├── repositories/
 ├── schemas/
 ├── services/
-└── utils/
+├── utils/
+└── main.py
 
 alembic/
 uploads/
+assets/
 ```
 
 ---
@@ -95,42 +134,75 @@ uploads/
 ## API Endpoints
 
 ### Users
+
 - POST `/users/register`
 - POST `/users/login`
 - GET `/users/me`
 
 ### Documents
+
 - POST `/documents/upload`
 - GET `/documents`
 
 ### Chat
+
 - POST `/chat`
 
 ### Search
+
 - POST `/search`
 
 ---
 
 ## Installation
 
+Clone the repository
+
 ```bash
 git clone <repository-url>
+```
 
+Move into the project directory
+
+```bash
 cd documind
+```
 
+Create a virtual environment
+
+```bash
 python -m venv .venv
+```
 
-# Windows
+Activate the environment (Windows)
+
+```bash
 .venv\Scripts\activate
+```
 
+Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+Create a `.env` file
+
+```env
+DATABASE_URL=your_database_url
+JWT_SECRET_KEY=your_secret_key
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+Run the application
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-Open:
+Open Swagger
 
-```
+```text
 http://127.0.0.1:8000/docs
 ```
 
@@ -138,9 +210,9 @@ http://127.0.0.1:8000/docs
 
 ## Current Status
 
-✅ Backend completed
+✅ Backend MVP completed
 
-### Next Improvements
+### Upcoming Improvements
 
 - React Frontend
 - Docker Support
@@ -152,4 +224,4 @@ http://127.0.0.1:8000/docs
 
 ## License
 
-This project was built for learning and portfolio purposes.
+This project was built for learning, experimentation, and portfolio purposes.
