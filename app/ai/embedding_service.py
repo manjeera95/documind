@@ -2,10 +2,16 @@ from sentence_transformers import SentenceTransformer
 
 
 class EmbeddingService:
-    model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+    model = None
+
+    @classmethod
+    def get_model(cls):
+        if cls.model is None:
+            cls.model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+        return cls.model
 
     @classmethod
     def generate_embedding(cls, text: str):
-        embedding = cls.model.encode(text)
-
+        model = cls.get_model()
+        embedding = model.encode(text)
         return embedding.tolist()
